@@ -1,0 +1,19 @@
+.container.position-relative.px-4.px-lg-5
+	.row.gx-4.gx-lg-5.justify-content-center
+		.col-md-10.col-lg-8.col-xl-7
+			%h1 Edit Team
+%hr.my-4/
+#append_team.container.px-4.px-lg-5
+	.container.px-4.px-lg-5
+		.row.gx-4.gx-lg-5.justify-content-center
+			.col-md-10.col-lg-8.col-xl-7
+				.row				
+					= form_for(@team) do |f|
+						= render partial: 'shared/error_messages', locals: {object: f.object}
+						.col-auto
+							= f.label :team_name
+							%br/
+							= f.text_field :tname, id: "tname", class: "form-control"
+							%br/ 
+							= f.submit "Save", class: "btn btn-outline-secondary"
+									

@@ -1,0 +1,28 @@
+.container.position-relative.px-4.px-lg-5
+	.row.gx-4.gx-lg-5.justify-content-center
+		.col-md-10.col-lg-8.col-xl-7
+			%h1 Add Team Member Shift
+%hr.my-4/
+#append_team.container.px-4.px-lg-5
+	.container.px-4.px-lg-5
+		.row.gx-4.gx-lg-5.justify-content-center
+			.col-md-10.col-lg-8.col-xl-7
+				.row				
+					= form_tag controller: :shifts, action: :create do 
+						= select_tag "team", options_from_collection_for_select(@teams, "id","tname"), { prompt: "select team", class: "form-control"}
+						%br/
+						= select_tag "team_member", options_from_collection_for_select([], "id", "name"), {class: "form-control", prompt: "select team member"}
+						= submit_tag "Save", class: "btn btn-outline-secondary"
+:javascript
+	$("#team").change(function(e){
+	var a = $("<% %>");
+	$.ajax({
+		url: "/teams/a",
+		type: "get",
+		success: function(res){
+			console.log();
+		},
+		error: function(xhr, textStatus, error) {
+			alert(xhr.statusText+" "+textStatus+" "+error);
+		});
+	});

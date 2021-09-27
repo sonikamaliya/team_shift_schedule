@@ -1,0 +1,68 @@
+.container.position-relative.px-4.px-lg-5
+  .row.gx-4.gx-lg-5.justify-content-center
+    .col-md-10.col-lg-8.col-xl-7
+      %h1 Team List
+%hr.my-4/
+- flash.each do |type, msg| 
+  .alert.alert-info= msg
+- if @teams.any?
+  - @teams.each do |t|
+    #append_team.container.px-4.px-lg-5
+      .container.px-4.px-lg-5
+        .row.gx-4.gx-lg-5.justify-content-center
+          .col-md-10.col-lg-8.col-xl-7
+            .post-preview
+              %h2.post-title
+                = t.tname
+              %h3.post-subtitle
+                .btn.btn-outline-secondary= link_to "Edit Team", edit_team_path(t.id)
+                .btn.btn-outline-secondary= link_to "Delete Team", team_path(t.id), method: :delete, data: { confirm: "Are you sure?", disable_with: "Processing..." }
+                .btn.btn-outline-secondary= link_to "Add Team Member", get_member_team_path(t.id)
+              %hr.my-4/
+.container.px-4.px-lg-5
+  .row.gx-4.gx-lg-5.justify-content-center
+    .col-md-10.col-lg-8.col-xl-7
+      / Post preview
+      .post-preview
+        %h2.post-title
+          %button.btn.btn-primary{"data-bs-target" => "#exampleModal", "data-bs-toggle" => "modal", :type => "button"} Create Team
+#exampleModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      = form_for(@team, remote: true) do |f|
+        .modal-header
+          %h5#exampleModalLabel.modal-title Create Team
+          %button.btn-close{"aria-label" => "Close", "data-bs-dismiss" => "modal", :type => "button"}
+        .modal-body
+          = hidden_field_tag :authenticity_token, form_authenticity_token
+          .field
+            = f.label :team_name
+            = f.text_field :tname, id: "tname"
+          %br/
+          .actions
+            = f.submit " Save " , id: "saveTeam", class: "btn btn-outline-secondary", remote: "true"
+            = f.submit " Close ", :type => "reset", class: "btn btn-outline-secondary"                      
+:javascript
+  $('#saveTeam').click(function(event){
+      var name = $('#tname').val();
+      event.preventDefault();
+      $.ajax({ 
+        url: '/teams',
+        headers: {
+          'X-CSRF-Token': '#{form_authenticity_token.to_s}'
+        }, 
+        method: 'POST', 
+        data: { team: { tname: name }}, 
+        success: function(data) { 
+          console.log("I m in success...!");
+          $("#append_team").load(" #append_team"); 
+          $("#exampleModal").modal('hide'); 
+          setTimeout(function(){ 
+            location.reload();  
+          }, 1000);
+        }, 
+        error: function(xhr, textStatus, error) {
+          alert(xhr.statusText+" "+textStatus+" "+error);
+     }
+      });
+    });            
